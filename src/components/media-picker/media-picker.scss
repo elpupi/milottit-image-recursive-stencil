@@ -1,0 +1,12 @@
+:host {
+    display: block;
+}
+
+input {
+    display: none;
+}
+
+.dragging {
+    transform: scale(1.01);
+    opacity: 0.8;
+}

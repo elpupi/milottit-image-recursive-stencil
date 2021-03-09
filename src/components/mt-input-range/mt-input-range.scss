@@ -1,0 +1,27 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    max-width: 500px;
+}
+
+label {
+    font-size: 1.4rem;
+}
+
+
+.label {
+    span {
+        font-weight: 500;
+    }
+
+    label+span {
+        margin-left: 5px;
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}

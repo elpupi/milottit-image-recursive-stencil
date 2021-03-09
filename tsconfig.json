@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": false,
+        "declaration": false,
+        "experimentalDecorators": true,
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ESNext"
+        ],
+        "moduleResolution": "node",
+        "module": "ESNext",
+        "target": "ESNext",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "jsx": "react",
+        "jsxFactory": "h",
+        "baseUrl": ".",
+        "paths": {
+            "@src/*": [
+                "src/*"
+            ],
+            "@services": [
+                "src/services"
+            ],
+            "@services/*": [
+                "src/services/*"
+            ],
+            "@components/*": [
+                "src/components/*"
+            ],
+            "@util/*": [
+                "src/util/*"
+            ],
+            "@util": [
+                "src/util"
+            ],
+        },
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

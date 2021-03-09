@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+
+
+
+}
+
+::slotted([slot="item"]) {
+    margin-left: 15px;
+}
+
+
+::slotted([slot="item"]):first-child {
+    margin-left: 0;
+}

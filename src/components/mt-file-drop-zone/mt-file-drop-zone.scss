@@ -1,0 +1,17 @@
+:host {
+    display: block;
+    width: 100%;
+    min-width: 200px;
+    max-width: 1000px;
+}
+
+.drop-zone {
+    border: 2px dashed var(--primary);
+    color: var(--primary-dark);
+    padding: 50px 20px;
+
+    &.dragging {
+        border-style: solid;
+        opacity: 1;
+    }
+}
