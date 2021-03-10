@@ -1,6 +1,6 @@
 import { Component, Host, Prop, State, Event, h, EventEmitter, Method } from '@stencil/core';
 import { toBoolean, BooleanAttribute, toNumber } from '@src/util';
-import { store, SettingsStore } from '@src/settings.store';
+import { settingsStore, SettingsState } from '@store';
 
 
 @Component({
@@ -14,10 +14,10 @@ export class MtInputRange {
     @Prop() name: string;
     @Prop() min: string | number;
     @Prop() max: string | number;
-    @Prop() value: string | number = '';
+    @Prop({ mutable: true }) value: string | number = '';
     @Prop({ mutable: true }) enabled: BooleanAttribute = true;
     @Prop() emitOnInit: BooleanAttribute = false;
-    @Prop() store: keyof SettingsStore;
+    @Prop() keySettingsStore: keyof SettingsState;
     @State() output: string;
 
     @Event({ eventName: 'data' }) changeEmitter: EventEmitter<number>;
@@ -33,8 +33,8 @@ export class MtInputRange {
         if (!this.output)
             this.setOutput(this.default);
 
-        if (this.store) {
-            store.onChange(this.store, value => {
+        if (this.keySettingsStore) {
+            settingsStore.onChange(this.keySettingsStore, value => {
                 const v = value ?? this.default;
                 this.value = v;
                 this.setOutput(v);
@@ -42,7 +42,7 @@ export class MtInputRange {
         }
     }
 
-    componentDidLoad() {
+    componentWillLoad() {
         if (toBoolean(this.emitOnInit))
             this.emitValue();
     }

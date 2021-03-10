@@ -20,6 +20,12 @@ export const zoomFromMouseWheel = (event: WheelEvent) => {
 export const elementVisibility = (el: HTMLElement, visible: boolean) => visible ? el.classList.remove('invisible') : el.classList.add('invisible');
 
 
+export type TT<K> = K | K[];
+
+export function ensureArray<T extends TT<any>>(v: T): T extends any[] ? T : T[] {
+    return (Array.isArray(v) ? v : typeof v !== 'undefined' ? [ v ] : []) as any;
+}
+
 export function ensureFunction<T>(v: T): T extends (...args: any[]) => any ? T : never {
     return typeof v === 'function' ? v as any : (..._args: any[]) => v;
 }
@@ -52,10 +58,10 @@ export const ifChained = <D = never, F = never>(data: D = undefined, finalValue:
             const select = ensureFunction(selector)(data);
 
             const iff = ensureFunction(select.if)();
-            const then = select.isValueFunction ? select.then : ensureFunction(select.then)();
-            const elsee = isDefinedProp(select, 'else') ? select.isValueFunction ? select.else : ensureFunction(select.else)() : undefined;
+            const then = () => select.isValueFunction ? select.then : ensureFunction(select.then)();
+            const elsee = () => isDefinedProp(select, 'else') ? select.isValueFunction ? select.else : ensureFunction(select.else)() : undefined;
 
-            value = iff || typeof iff === 'undefined' ? then : elsee;
+            value = iff || typeof iff === 'undefined' ? then() : elsee();
             nextData = isDefinedProp(select, 'next') ? select.next : data as any as N;
             isDone = iff || isDefinedProp(select, 'else');
         }

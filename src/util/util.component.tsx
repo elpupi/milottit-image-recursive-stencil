@@ -1,8 +1,18 @@
 import { FunctionalComponent, h, VNode } from '@stencil/core';
 import { PropsByTag, Tags } from './jsx.types';
+import { ensureArray } from './util';
 
 export const vnodeToComponent = <T extends {}>(vnodes: VNode | VNode[]): FunctionalComponent<T> => {
-    return (_props: T, _children: VNode[]) => vnodes;
+    const vnodeList = ensureArray(vnodes).filter(v => !!v);
+
+    return (props, children, utils) => utils.map(vnodeList, vnode => ({
+        ...vnode,
+        vchildren: [ ...(vnode.vchildren || []), ...children ],
+        vattrs: {
+            ...(vnode.vattrs || {}),
+            ...props
+        }
+    }));
 };
 
 

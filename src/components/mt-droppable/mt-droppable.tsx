@@ -1,4 +1,5 @@
-import { Component, Host, State, Event, EventEmitter, h } from '@stencil/core';
+import { Component, Host, State, Prop, Event, EventEmitter, h } from '@stencil/core';
+
 
 @Component({
     tag: 'mt-droppable',
@@ -7,6 +8,7 @@ import { Component, Host, State, Event, EventEmitter, h } from '@stencil/core';
     scoped: true
 })
 export class MtDroppable {
+    @Prop() draggingClassName: string = 'dragging';
     @State() draggingClass: string = '';
     @Event({ eventName: 'dragging' }) onDragging: EventEmitter<boolean>;
     @Event({ eventName: 'data' }) onData: EventEmitter<DataTransfer>;
@@ -19,9 +21,9 @@ export class MtDroppable {
 
     private onDragEnter(event: DragEvent) {
         if (this.childrenCounter === 0) {
-            this.draggingClass = 'dragging';
+            this.draggingClass = this.draggingClassName;
             event.dataTransfer.effectAllowed = 'copy';
-            console.log(event.dataTransfer.files);
+
             this.onDragging.emit(true);
 
             event.preventDefault(); // obliged to do it, if not, browser disallows draggable

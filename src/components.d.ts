@@ -5,11 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { NumberStr } from "./components/mt-image-recursive/mt-image-recursive";
 import { HTMLMediaElement } from "@src/types";
+import { NumberStr } from "./components/mt-image-recursive/mt-image-recursive";
 import { BooleanAttribute } from "@src/util";
-import { SettingsStore } from "@src/settings.store";
-import { MtStoreChildComponent, MtStoreChildRenderer, Store, StoreState } from "./components/mt-store/types";
+import { SettingsState } from "@store";
+import { MtStoreChildComponent, MtStoreChildRenderer, Store, StoreState } from "./util/components/mt-store/types";
 import { VNode } from "@stencil/core";
 export namespace Components {
     interface AppRoot {
@@ -19,6 +19,7 @@ export namespace Components {
         "secondary": boolean;
     }
     interface MtDroppable {
+        "draggingClassName": string;
     }
     interface MtFileDropZone {
     }
@@ -34,11 +35,14 @@ export namespace Components {
         "emitOnInit": BooleanAttribute;
         "enabled": BooleanAttribute;
         "getValue": (force?: boolean) => Promise<number>;
+        "keySettingsStore": keyof SettingsState;
         "max": string | number;
         "min": string | number;
         "name": string;
-        "store": keyof SettingsStore;
         "value": string | number;
+    }
+    interface MtMediaLoader {
+        "files": FileList;
     }
     interface MtMediaPicker {
         "reset": () => Promise<void>;
@@ -92,6 +96,12 @@ declare global {
         prototype: HTMLMtInputRangeElement;
         new (): HTMLMtInputRangeElement;
     };
+    interface HTMLMtMediaLoaderElement extends Components.MtMediaLoader, HTMLStencilElement {
+    }
+    var HTMLMtMediaLoaderElement: {
+        prototype: HTMLMtMediaLoaderElement;
+        new (): HTMLMtMediaLoaderElement;
+    };
     interface HTMLMtMediaPickerElement extends Components.MtMediaPicker, HTMLStencilElement {
     }
     var HTMLMtMediaPickerElement: {
@@ -123,6 +133,7 @@ declare global {
         "mt-file-drop-zone": HTMLMtFileDropZoneElement;
         "mt-image-recursive": HTMLMtImageRecursiveElement;
         "mt-input-range": HTMLMtInputRangeElement;
+        "mt-media-loader": HTMLMtMediaLoaderElement;
         "mt-media-picker": HTMLMtMediaPickerElement;
         "mt-row": HTMLMtRowElement;
         "mt-store": HTMLMtStoreElement;
@@ -137,12 +148,13 @@ declare namespace LocalJSX {
         "secondary"?: boolean;
     }
     interface MtDroppable {
+        "draggingClassName"?: string;
         "onData"?: (event: CustomEvent<DataTransfer>) => void;
         "onDragging"?: (event: CustomEvent<boolean>) => void;
         "onFiles"?: (event: CustomEvent<FileList>) => void;
     }
     interface MtFileDropZone {
-        "onFiles"?: (event: CustomEvent<FileList>) => void;
+        "onMedia"?: (event: CustomEvent<HTMLMediaElement>) => void;
     }
     interface MtImageRecursive {
         "nbRecursion"?: NumberStr;
@@ -153,15 +165,20 @@ declare namespace LocalJSX {
         "default"?: string | number;
         "emitOnInit"?: BooleanAttribute;
         "enabled"?: BooleanAttribute;
+        "keySettingsStore"?: keyof SettingsState;
         "max"?: string | number;
         "min"?: string | number;
         "name"?: string;
         "onData"?: (event: CustomEvent<number>) => void;
-        "store"?: keyof SettingsStore;
         "value"?: string | number;
     }
+    interface MtMediaLoader {
+        "files"?: FileList;
+        "onLoading"?: (event: CustomEvent<boolean>) => void;
+        "onMedia"?: (event: CustomEvent<HTMLMediaElement>) => void;
+    }
     interface MtMediaPicker {
-        "onFiles"?: (event: CustomEvent<FileList>) => void;
+        "onMedia"?: (event: CustomEvent<HTMLMediaElement>) => void;
     }
     interface MtRow {
     }
@@ -181,6 +198,7 @@ declare namespace LocalJSX {
         "mt-file-drop-zone": MtFileDropZone;
         "mt-image-recursive": MtImageRecursive;
         "mt-input-range": MtInputRange;
+        "mt-media-loader": MtMediaLoader;
         "mt-media-picker": MtMediaPicker;
         "mt-row": MtRow;
         "mt-store": MtStore;
@@ -197,6 +215,7 @@ declare module "@stencil/core" {
             "mt-file-drop-zone": LocalJSX.MtFileDropZone & JSXBase.HTMLAttributes<HTMLMtFileDropZoneElement>;
             "mt-image-recursive": LocalJSX.MtImageRecursive & JSXBase.HTMLAttributes<HTMLMtImageRecursiveElement>;
             "mt-input-range": LocalJSX.MtInputRange & JSXBase.HTMLAttributes<HTMLMtInputRangeElement>;
+            "mt-media-loader": LocalJSX.MtMediaLoader & JSXBase.HTMLAttributes<HTMLMtMediaLoaderElement>;
             "mt-media-picker": LocalJSX.MtMediaPicker & JSXBase.HTMLAttributes<HTMLMtMediaPickerElement>;
             "mt-row": LocalJSX.MtRow & JSXBase.HTMLAttributes<HTMLMtRowElement>;
             "mt-store": LocalJSX.MtStore & JSXBase.HTMLAttributes<HTMLMtStoreElement>;

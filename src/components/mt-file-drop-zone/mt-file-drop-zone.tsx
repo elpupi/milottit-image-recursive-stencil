@@ -1,11 +1,9 @@
 import { Component, Host, Event, EventEmitter, h } from '@stencil/core';
-import { MtStore } from '@components/mt-store/mt-store.functional';
-/* import { Store } from '@components/mt-store/mt-store';
+import { HTMLMediaElement } from '@src/types';
+import { MtStore } from '@util';
+import { initDroppableState, MtDroppableStateInfo, MtDroppableWithState } from '@components/mt-droppable/mt-droppable.functional';
 
 
-type State = {
-    isDragging: boolean;
-}; */
 
 
 @Component({
@@ -15,26 +13,19 @@ type State = {
     scoped: true
 })
 export class MtFileDropZone {
-    @Event({ eventName: 'files' }) onFiles: EventEmitter<FileList>;
+    @Event({ eventName: 'media' }) onMedia: EventEmitter<HTMLMediaElement>;
 
     render() {
+        const onMedia = this.onMedia.emit.bind(this.onMedia);
+
         return (
             <Host>
-                <MtStore state={{ isDragging: false }} childRenderer={store => (
-
-                    <mt-droppable class="drop-zone center full" onFiles={e => this.onFiles.emit(e.detail)} onDragging={e => store.set('isDragging', e.detail)}>
-                        <span draggable class="info">
-                            <mt-visible visible={!store.get('isDragging')}><slot></slot></mt-visible>
-                            <mt-visible visible={store.get('isDragging')}><span>Dragging file...</span></mt-visible>
-                        </span>
-
-                        <span draggable class="loading"></span>
-                    </mt-droppable>
-
-                )}></MtStore>
-
+                <MtStore state={initDroppableState} childRenderer={({ state }) => (
+                    <MtDroppableWithState state={state} onMedia={onMedia}>
+                        <MtDroppableStateInfo state={state.zoneState}></MtDroppableStateInfo>
+                    </MtDroppableWithState>
+                )}><slot></slot></MtStore>
             </Host >
         );
     }
-
 }

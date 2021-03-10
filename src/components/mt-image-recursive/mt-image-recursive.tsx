@@ -1,5 +1,5 @@
 import { Component, Host, Prop, h, Method, Watch, State, EventEmitter, Event } from '@stencil/core';
-import { store } from '@src/settings.store';
+import { settingsStore } from '@store';
 import { toNumber } from '@util';
 import { Area, WidthHeight, HTMLMediaElement } from '@src/types';
 import { easelJS, DragableSelection, ImageRecursive, EaselBitmap, imageDimensions } from '@services';
@@ -58,7 +58,7 @@ export class MtImageRecursive {
 
         if (typeof this.canvasWidth === 'number') {
             this.onNewWidth.emit(this.canvasWidth);
-            store.set('width', this.canvasWidth);
+            settingsStore.state.width = this.canvasWidth;
         }
     }
 

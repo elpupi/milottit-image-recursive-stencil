@@ -1,4 +1,4 @@
-import { h/* , FunctionalComponent, JSX as JSX2 */ } from '@stencil/core';
+// import { h/* , FunctionalComponent, JSX as JSX2 */ } from '@stencil/core';
 /* import { JSX } from '@src/components';
 import { JSXBase } from '@stencil/core/internal'; */
 import { composeByTag2 } from '@util';

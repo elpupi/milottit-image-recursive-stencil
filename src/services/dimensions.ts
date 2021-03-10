@@ -2,14 +2,7 @@ import { ifChained } from '@util';
 import type { HTMLMediaElement, WidthHeight } from '@src/types';
 
 
-const htmlElementSize = (el: HTMLElement): WidthHeight => {
-    // const { width, height } = getComputedStyle(el);
-    // const borders = getBordersSize(el);
-
-    // return { width: parseFloat(width) - borders.left - borders.right, height: parseFloat(height) - borders.top - borders.bottom };
-    // It includes padding but excludes borders, margins, and vertical scrollbars (if present).
-    return { width: el.clientWidth, height: el.clientHeight };
-};
+const htmlElementSize = (el: HTMLElement): WidthHeight => ({ width: el.clientWidth, height: el.clientHeight });
 
 const mediaSize = (media: HTMLMediaElement): WidthHeight => {
     if (media instanceof HTMLImageElement)

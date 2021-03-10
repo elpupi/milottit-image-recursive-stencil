@@ -1,8 +1,7 @@
-import { Component, Host, State, h, FunctionalComponent as FC } from '@stencil/core';
-import { onNewFile } from '@services/new-file';
-import { JSX } from '@src/components';
-import { mtVisible } from '@components/mt-visible/mt-visible.functional';
-import { store } from '@src/settings.store';
+import { Component, Host, State, h, FunctionalComponent as FC, Fragment } from '@stencil/core';
+import { settingsStore } from '@store';
+import { MtStore, mtVisible, PropsByTag } from '@util';
+import { HTMLMediaElement } from '@src/types';
 
 
 /* const [ MtFileDropZoneV, MtImageRecursiveV ] = [
@@ -16,7 +15,7 @@ const [ MtFileDropZoneV, MtImageRecursiveV ] = [
     mtVisible('mt-image-recursive')
 ];
 
-const InputRange: FC<Partial<JSX.MtInputRange> & { class?: string; }> = (props, children) => {
+const InputRange: FC<PropsByTag<'mt-input-range'>> = (props, children) => {
     const p = { ...props, class: `column full ${props.class || ''}` };
 
     return (<mt-input-range enabled="false" emitOnInit {...p}>{children}</mt-input-range>);
@@ -32,9 +31,6 @@ const InputRange: FC<Partial<JSX.MtInputRange> & { class?: string; }> = (props, 
 export class AppRoot {
     private imageRecursive: HTMLMtImageRecursiveElement;
     private mediaPicker: HTMLMtMediaPickerElement;
-    @State() private nbRecursion: number = 5;
-    @State() private width: number;
-    // @State() private onCanvasWidth: number;
     @State() private isMediaLoaded: boolean = false;
 
 
@@ -53,7 +49,7 @@ export class AppRoot {
 
     private async clear() {
         this.isMediaLoaded = false;
-        store.set('width', undefined);
+        settingsStore.state.width = undefined;
 
         await Promise.all([
             this.imageRecursive.clear(),
@@ -62,54 +58,53 @@ export class AppRoot {
     }
 
 
-    private onNewFiles(event: CustomEvent<FileList>) {
-        onNewFile(event.detail, mediaEl => {
-            this.clear();
-            this.isMediaLoaded = true;
-            this.imageRecursive.create(mediaEl);
-        });
+    private onMedia(event: CustomEvent<HTMLMediaElement>) {
+        const mediaEl = event.detail;
+
+        this.clear();
+        this.isMediaLoaded = true;
+        this.imageRecursive.create(mediaEl);
     }
 
 
     render() {
-        const onNewFiles = this.onNewFiles.bind(this);
+        const onMedia = this.onMedia.bind(this);
         const onClick = this.onClick.bind(this);
-        onNewFiles === onNewFiles;
-        onClick === onClick;
+
 
         return (
-            <Host class="center full" >
+            <Host class="center full">
+                <MtStore store={settingsStore} childRenderer={({ state }) => (
 
-                {/* <mt-file-drop-zone class="margin-top full center" onFiles={onNewFiles}>
-                    You can drop an image or video here also 📷
-                </mt-file-drop-zone> */}
+                    <Fragment>
+                        <h3 class="center full title">Milotti's Image Recursive Project</h3>
 
-                <h3 class="center full title">Milotti Challenge</h3>
+                        <section class="center full column margin-top">
 
-                <section class="center full column margin-top">
+                            <mt-media-picker onMedia={onMedia} ref={el => this.mediaPicker = el}>Choose or Drag an image or video</mt-media-picker>
 
-                    <mt-media-picker onFiles={onNewFiles} ref={el => this.mediaPicker = el}>Choose or Drag an image or video</mt-media-picker>
-
-                    <mt-row class="margin-top-2">
-                        <mt-button secondary slot="item" onClick={() => onClick('clear-all')}>Clear All</mt-button>
-                        <mt-button secondary slot="item" onClick={() => onClick('clear-selection')}>Clear Selection</mt-button>
-                    </mt-row>
+                            <mt-row class="margin-top-2">
+                                <mt-button secondary slot="item" onClick={() => onClick('clear-all')}>Clear All</mt-button>
+                                <mt-button secondary slot="item" onClick={() => onClick('clear-selection')}>Clear Selection</mt-button>
+                            </mt-row>
 
 
-                    <div class="column full center margin-top">
-                        <InputRange name="canvas-width" min="200" max="2000" default="auto" onData={e => this.width = e.detail} store="width">Canvas Width:</InputRange>
-                        <InputRange name="nb-recursion" class="margin-top-2" min="1" max="30" value="5" onData={e => this.nbRecursion = e.detail}>Number Recursion:</InputRange>
-                    </div>
+                            <div class="column full center margin-top">
+                                <InputRange name="canvas-width" min="200" max="2000" default="auto" onData={e => state.width = e.detail} keySettingsStore="width">Canvas Width:</InputRange>
+                                <InputRange name="nb-recursion" class="margin-top-2" min="1" max="30" value="5" onData={e => state.nbRecursion = e.detail}>Number Recursion:</InputRange>
+                            </div>
 
-                    <MtFileDropZoneV class="margin-top full center" onFiles={onNewFiles} visible={!this.isMediaLoaded}>
-                        You can drop an image or video here also 📷
-                    </MtFileDropZoneV>
+                            <MtFileDropZoneV class="margin-top full center" onMedia={onMedia} visible={!this.isMediaLoaded}>
+                                You can drop an image or video here also 📷
+                                </MtFileDropZoneV>
 
-                    <MtImageRecursiveV class="margin-top center" visible={this.isMediaLoaded} width={this.width} nbRecursion={this.nbRecursion} innerRef={el => this.imageRecursive = el}>
-                    </MtImageRecursiveV>
+                            <MtImageRecursiveV class="margin-top center" visible={this.isMediaLoaded} width={state.width} nbRecursion={state.nbRecursion} innerRef={el => this.imageRecursive = el}>
+                            </MtImageRecursiveV>
 
-                </section>
+                        </section>
+                    </Fragment>
 
+                )}></MtStore>
             </Host >
         );
     }

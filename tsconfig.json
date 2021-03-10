@@ -36,6 +36,12 @@
             "@util": [
                 "src/util"
             ],
+            "@store/*": [
+                "src/store/*"
+            ],
+            "@store": [
+                "src/store"
+            ],
         },
     },
     "include": [

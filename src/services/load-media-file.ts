@@ -7,8 +7,13 @@ const acceptableTypes = [ 'image/', 'video/' ] as const;
 
 const acceptFile = (file: File) => acceptableTypes.some(type => file.type.startsWith(type));
 
+export interface OnNewMediaFileOptions {
+    onMedia?: (media: HTMLMediaElement) => void;
+    onLoading?: (isLoading: 'start' | 'end') => void;
+}
 
-export const onNewFile = (files: FileList, onChange: (media: HTMLMediaElement) => void) => {
+export const loadMediaFile = (files: FileList, options: OnNewMediaFileOptions = {}) => {
+
     if (files.length === 0)
         return;
 
@@ -38,13 +43,12 @@ export const onNewFile = (files: FileList, onChange: (media: HTMLMediaElement) =
     const media = getMedia();
     media.src = url;
 
-    /*  dropZoneLoadingText.textContent = 'Loading...';
-     dropZoneInfo.forEach(el => elementVisibility(el, false)); */
+    options?.onLoading('start');
 
     once(media, type === 'image' ? 'load' : 'canplay', () => {
-        /*    dropZoneLoadingText.textContent = '';
-           dropZoneInfo.forEach(el => elementVisibility(el, true));
-    */
-        onChange(media);
+
+        options?.onLoading('end');
+        options?.onMedia(media);
+
     }, { passive: true });
 };
