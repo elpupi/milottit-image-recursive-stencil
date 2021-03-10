@@ -1,41 +1,49 @@
-# Stencil App Starter
+# **Image Recursive** Proof Of Concept
 
-Stencil is a compiler for building fast web apps using Web Components.
+**TL;DR**  Implémentation d'une image récursive comme on le retrouve dans les partages d'écrans fait avec __Stencil JS__
 
-Stencil combines the best concepts of the most popular frontend frameworks into a compile-time rather than run-time tool.  Stencil takes TypeScript, JSX, a tiny virtual DOM layer, efficient one-way data binding, an asynchronous rendering pipeline (similar to React Fiber), and lazy-loading out of the box, and generates 100% standards-based Web Components that run in any browser supporting the Custom Elements v1 spec.
+Défi de mon frère @milvi :+1: :sparkles: :camel: :tada: :rocket: :metal: :octocat:
 
-Stencil components are just Web Components, so they work in any major framework or with no framework at all. In many cases, Stencil can be used as a drop in replacement for traditional frontend frameworks given the capabilities now available in the browser, though using it as such is certainly not required.
-
-Stencil also enables a number of key capabilities on top of Web Components, in particular Server Side Rendering (SSR) without the need to run a headless browser, pre-rendering, and objects-as-properties (instead of just strings).
-
-## Getting Started
-
-To start a new project using Stencil, clone this repo to a new directory:
+Pour lancer le programme sur Chrome:
 
 ```bash
-npm init stencil app
+npm run start:chrome
 ```
-
-and run:
+ou sur Firefox:
 
 ```bash
-npm start
+npm run start:firefox
 ```
 
-To build the app for production, run:
+## Contexte
 
-```bash
-npm run build
-```
+Quand on partage son écran et qu'on regarde sa propre vidéo, on constate une récursivité infini tel qu'on le
+retrouve avec 2 miroirs face à face.
 
-To run the unit tests once, run:
+Evidemment, si 2 personnes partagent leurs écrans mutuellement, et qu'ils visionnent ce partage, ils verront une
+récursion alternée entre les 2 écrans.
 
-```
-npm test
-```
 
-To run the unit tests and watch for file changes during development, run:
+## Objectif
 
-```
-npm run test.watch
-```
+Implémenter ce phénomène dans un canvas suivant la consigne suivante:
+
+1. Importation d'une image
+
+2. Chargement de l'image dans un canvas
+
+3. Sélectionner une zône sur le canvas
+
+4. Effectuer la récursion dans la sélection
+
+5. Répéter l'opération si l'image ou la sélection de la zône est mise à jour
+
+_____
+
+### Contrainte
+
+Respecter un délai maximal (impossible :flushed: :smirk: :smile:) de 1h.
+
+_____
+
+Fait avec :heart:
